@@ -1,8 +1,92 @@
-export interface EditVehicleProp {
-  vehicleId: string;
-}
+"use client";
 
-export default function EditVehicle({ vehicleId }: EditVehicleProp) {
+import { RequestResult, Vehicle } from "@/app/lib/definitions";
+import { redirect, usePathname } from "next/navigation";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Bounce, toast } from "react-toastify";
+import EditData from "./data";
+import axios from "axios";
+
+export default function EditVehicle({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const [id, setId] = useState<string | null>(null);
+  const [vehicle, setVehicle]: [Vehicle, Dispatch<SetStateAction<Vehicle>>] =
+    useState<Vehicle>({
+      plateNumber: "",
+      vehicleSpec: {
+        type: "",
+        brand: "",
+        modelCode: "",
+        noOfSeat: 0,
+        madeIn: "",
+        fuelType: "",
+        fuelConsumptionPer100Km: 0,
+        tankCapacity: 0,
+        topSpeed: 0,
+        frontRimsDimension: "",
+        backRimsDimension: "",
+      },
+      cost: 0,
+      health: "",
+      isRemoved: false,
+    });
+
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      setId(resolvedParams.id);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    if (id) {
+      axios
+        .get(`http://127.0.0.1:8080/vehicles/${id}`, {
+          headers: {
+            "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
+          },
+        })
+        .then((e) => {
+          setVehicle(e.data);
+        });
+    }
+  }, [id]);
+
+  let OnCancelClick = () => {
+    redirect("./");
+  };
+
+  let OnSaveClick = async () => {
+    let result: RequestResult = await EditData(vehicle);
+    if (result == RequestResult.SUCCESS) {
+      toast.success("Tạo thành công", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    } else {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+  };
+
   return (
     <>
       <div className="px-10 py-10 h-full w-full flex flex-col ">
@@ -23,6 +107,9 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="30A-99999"
                 required
+                onChange={(e) =>
+                  setVehicle({ ...vehicle, plateNumber: e.target.value })
+                }
               />
             </div>
             <div>
@@ -38,6 +125,12 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="562.0"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    cost: +e.target.value,
+                  })
+                }
               />
             </div>
           </div>
@@ -55,6 +148,9 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Mới"
                 required
+                onChange={(e) =>
+                  setVehicle({ ...vehicle, health: e.target.value })
+                }
               />
             </div>
           </div>
@@ -72,6 +168,15 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Ô tô con"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      type: e.target.value,
+                    },
+                  })
+                }
               />
             </div>
             <div>
@@ -87,6 +192,15 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Honda"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      brand: e.target.value,
+                    },
+                  })
+                }
               />
             </div>
             <div className="">
@@ -102,6 +216,15 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="HONDA CITY XD3143"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      modelCode: e.target.value,
+                    },
+                  })
+                }
               />
             </div>
           </div>
@@ -119,6 +242,15 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="5"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      noOfSeat: +e.target.value,
+                    },
+                  })
+                }
               />
             </div>
             <div>
@@ -134,6 +266,15 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Thái Lan"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      madeIn: e.target.value,
+                    },
+                  })
+                }
               />
             </div>
             <div>
@@ -149,6 +290,15 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Xăng"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      fuelType: e.target.value,
+                    },
+                  })
+                }
               />
             </div>
           </div>
@@ -166,6 +316,15 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="8.6"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      fuelConsumptionPer100Km: +e.target.value,
+                    },
+                  })
+                }
               />
             </div>
             <div>
@@ -181,6 +340,15 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="40"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      fuelConsumptionPer100Km: +e.target.value,
+                    },
+                  })
+                }
               />
             </div>
             <div>
@@ -196,6 +364,15 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="200"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      fuelConsumptionPer100Km: +e.target.value,
+                    },
+                  })
+                }
               />
             </div>
             <div>
@@ -212,14 +389,22 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="185/60/R15"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      frontRimsDimension: e.target.value,
+                    },
+                  })
+                }
               />
-            </div>{" "}
+            </div>
             <div>
               <label
                 htmlFor="vehicle_price"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                {" "}
                 Kích thước bánh sau
               </label>
               <input
@@ -228,17 +413,36 @@ export default function EditVehicle({ vehicleId }: EditVehicleProp) {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="185/60/R15"
                 required
+                onChange={(e) =>
+                  setVehicle({
+                    ...vehicle,
+                    vehicleSpec: {
+                      ...vehicle.vehicleSpec,
+                      backRimsDimension: e.target.value,
+                    },
+                  })
+                }
               />
             </div>
           </div>
         </div>
         <div className="flex gap-4 mt-auto">
-          <div className="w-1/5 mt-auto border px-2 py-3 cursor-pointer bg-sky-400 hover:bg-sky-500 active:bg-sky-600 rounded-md text-center items-center content-center shadow-md">
+          <div
+            className="w-1/5 mt-auto border px-2 py-3 cursor-pointer bg-sky-400 hover:bg-sky-500 active:bg-sky-600 rounded-md text-center items-center content-center shadow-md"
+            onClick={() => {
+              OnSaveClick();
+            }}
+          >
             <div className="text-white drop-shadow-lg select-none font-bold">
               Lưu
             </div>
           </div>
-          <div className="w-1/6 mt-auto border px-2 py-3 cursor-pointer bg-red-400 hover:bg-red-500 active:bg-red-600 rounded-md text-center items-center content-center shadow-md">
+          <div
+            className="w-1/6 mt-auto border px-2 py-3 cursor-pointer bg-red-400 hover:bg-red-500 active:bg-red-600 rounded-md text-center items-center content-center shadow-md"
+            onClick={() => {
+              OnCancelClick();
+            }}
+          >
             <div className="text-white drop-shadow-lg select-none font-bold">
               Hủy
             </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Vehicle,
   VehicleInspectionInfo,
@@ -8,25 +10,19 @@ import SvgEdit from "@/app/ui/svg-edit";
 import TableSortSvg from "@/app/ui/table-sort-svg";
 import axios from "axios";
 import Link from "next/link";
+import DeleteData from "./delete/data";
+import GetData from "./data";
+import { useEffect, useState } from "react";
 
-export default async function Page() {
-  let [responseV, responseI, responseS] = await axios.all([
-    axios.get("http://127.0.0.1:8080/vehicles", {
-      headers: {
-        "X-API-KEY":
-          "$2a$05$NtAgEM5Pbh30mFlU8CWwTOpFkw4OGNXYR7Xm0RkbCiSc0hCqSqTVy",
-      },
-    }),
-    await axios.get("http://127.0.0.1:8080/inspection-info", {
-      headers: {
-        "X-API-KEY":
-          "$2a$05$NtAgEM5Pbh30mFlU8CWwTOpFkw4OGNXYR7Xm0RkbCiSc0hCqSqTVy",
-      },
-    }),
-  ]);
+export default function Page() {
+  let [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  useEffect(() => {
+    GetData().then((e) => setVehicles(e.data));
+  }, []);
 
-  let vehicles: Vehicle[] = responseV.data;
-  let inspection: VehicleInspectionInfo[] = responseI.data;
+  let deleteClickHandler = (vehicle: Vehicle) => {
+    DeleteData(vehicle);
+  };
 
   return (
     <>
@@ -124,43 +120,52 @@ export default async function Page() {
                   </tr>
                 </thead>
                 <tbody>
-                  {vehicles.map((e, i): React.ReactNode => {
+                  {vehicles.map((vehicle, i): React.ReactNode => {
                     return (
-                      <>
-                        <tr
-                          className="bg-white  dark:bg-gray-800 dark:border-gray-700 hover:bg-sky-50"
-                          key={i}
+                      <tr
+                        className="bg-white  dark:bg-gray-800 dark:border-gray-700 hover:bg-sky-50"
+                        key={i}
+                      >
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                         >
-                          <th
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                          >
-                            {e.plateNumber}
-                          </th>
+                          {vehicle.plateNumber}
+                        </th>
 
-                          <td className="px-6 py-4">{e.vehicleSpec.brand}</td>
-                          <td className="px-6 py-4">{e.cost}</td>
-                          <td className="px-6 py-4">{e.health}</td>
-                          <td className="px-6 py-4">{e.currentInspectId}</td>
-                          <td className="px-6 py-4 text-right">
-                            <div className="flex h-8 w-fit ml-auto">
-                              <div className="ml-auto flex gap-2">
-                                <Link
-                                  href={`./vehicle/edit/${
-                                    e.plateNumber != "" ? e.plateNumber : "-0"
-                                  }`}
-                                  className="h-8 w-8 hover:bg-sky-200 rounded-full p-1 cursor-pointer active:bg-sky-300"
-                                >
-                                  <SvgEdit />
-                                </Link>
-                                <div className="h-8 w-8 hover:bg-sky-200 rounded-full p-1 cursor-pointer active:bg-sky-300">
-                                  <SvgDelete />
-                                </div>
+                        <td className="px-6 py-4">
+                          {vehicle.vehicleSpec.brand}
+                        </td>
+                        <td className="px-6 py-4">{vehicle.cost}</td>
+                        <td className="px-6 py-4">{vehicle.health}</td>
+                        <td className="px-6 py-4">
+                          {vehicle.currentInspectId}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex h-8 w-fit ml-auto">
+                            <div className="ml-auto flex gap-2">
+                              <Link
+                                href={`./vehicle/edit/${
+                                  vehicle.plateNumber != ""
+                                    ? vehicle.plateNumber
+                                    : "-0"
+                                }`}
+                                className="h-8 w-8 hover:bg-sky-200 rounded-full p-1 cursor-pointer active:bg-sky-300"
+                              >
+                                <SvgEdit />
+                              </Link>
+                              <div
+                                className="h-8 w-8 hover:bg-sky-200 rounded-full p-1 cursor-pointer active:bg-sky-300"
+                                onClick={(e) => {
+                                  deleteClickHandler(vehicle);
+                                }}
+                              >
+                                <SvgDelete />
                               </div>
                             </div>
-                          </td>
-                        </tr>
-                      </>
+                          </div>
+                        </td>
+                      </tr>
                     );
                   })}
                 </tbody>
