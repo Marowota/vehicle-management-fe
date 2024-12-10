@@ -78,4 +78,5 @@ export enum RequestResult {
   SUCCESS,
   ERROR,
   MISSING_DATA,
+  NOT_AUTHENTICATED
 }

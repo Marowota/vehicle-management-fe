@@ -13,15 +13,33 @@ import Link from "next/link";
 import DeleteData from "./delete/data";
 import GetData from "./data";
 import { useEffect, useState } from "react";
+import { Bounce, toast } from "react-toastify";
 
 export default function Page() {
-  let [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [search, setSearch] = useState<String>("");
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   useEffect(() => {
-    GetData().then((e) => setVehicles(e.data));
+    GetData(search).then((e) => setVehicles(e.data));
   }, []);
 
-  let deleteClickHandler = (vehicle: Vehicle) => {
+  let searchClickHandler = () => {
+    GetData(search).then((e) => setVehicles(e.data));
+  };
+
+  let deleteClickHandler = (vehicle: Vehicle, index: number) => {
     DeleteData(vehicle);
+    setVehicles(vehicles.filter((data, i) => i != index));
+    toast.success("Xóa thành công", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
   };
 
   return (
@@ -36,8 +54,21 @@ export default function Page() {
               placeholder="Tìm kiếm"
               type="text"
               className="w-96 h-10 shadow-sm p-2.5 text-sm bg-sky-50 border border-sky-300 placeholder:text-blue-300 text-blue-900 rounded-l-lg focus:border focus:ring-sky-500 focus:border-sky-900 block  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  searchClickHandler();
+                }
+              }}
             />
-            <div className="border h-10 px-2 py-1 cursor-pointer bg-sky-400 border-sky-500 hover:bg-sky-500 active:bg-sky-600 rounded-r-lg text-center items-center content-center shadow-sm">
+            <div
+              className="border h-10 px-2 py-1 cursor-pointer bg-sky-400 border-sky-500 hover:bg-sky-500 active:bg-sky-600 rounded-r-lg text-center items-center content-center shadow-sm"
+              onClick={() => {
+                searchClickHandler();
+              }}
+            >
               <div className="text-white text-sm drop-shadow-lg select-none">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +188,7 @@ export default function Page() {
                               <div
                                 className="h-8 w-8 hover:bg-sky-200 rounded-full p-1 cursor-pointer active:bg-sky-300"
                                 onClick={(e) => {
-                                  deleteClickHandler(vehicle);
+                                  deleteClickHandler(vehicle, i);
                                 }}
                               >
                                 <SvgDelete />

@@ -49,13 +49,21 @@ export default function EditVehicle({
           },
         })
         .then((e) => {
-          setVehicle(e.data);
+          console.log("setting", e.data);
+          setVehicle((prevState) => ({
+            ...prevState,
+            ...e.data,
+          }));
         });
     }
   }, [id]);
 
+  useEffect(() => {
+    console.log("vehicle", vehicle);
+  }, [vehicle]);
+
   let OnCancelClick = () => {
-    redirect("./");
+    redirect("../");
   };
 
   let OnSaveClick = async () => {
@@ -72,6 +80,7 @@ export default function EditVehicle({
         theme: "light",
         transition: Bounce,
       });
+      redirect("../");
     } else {
       toast.error("Có lỗi xảy ra, vui lòng thử lại", {
         position: "top-right",
@@ -104,12 +113,15 @@ export default function EditVehicle({
               <input
                 type="text"
                 id="vehicle_id"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="30A-99999"
                 required
-                onChange={(e) =>
-                  setVehicle({ ...vehicle, plateNumber: e.target.value })
-                }
+                value={vehicle.plateNumber}
+                readOnly={true}
+                onChange={(e) => {
+                  console.log("test");
+                  setVehicle({ ...vehicle, plateNumber: e.target.value });
+                }}
               />
             </div>
             <div>
@@ -125,6 +137,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="562.0"
                 required
+                value={vehicle.cost}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
@@ -148,6 +161,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Mới"
                 required
+                value={vehicle.health}
                 onChange={(e) =>
                   setVehicle({ ...vehicle, health: e.target.value })
                 }
@@ -168,6 +182,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Ô tô con"
                 required
+                value={vehicle.vehicleSpec.type}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
@@ -192,6 +207,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Honda"
                 required
+                value={vehicle.vehicleSpec.brand}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
@@ -216,6 +232,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="HONDA CITY XD3143"
                 required
+                value={vehicle.vehicleSpec.modelCode}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
@@ -242,6 +259,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="5"
                 required
+                value={vehicle.vehicleSpec.noOfSeat}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
@@ -266,6 +284,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Thái Lan"
                 required
+                value={vehicle.vehicleSpec.madeIn}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
@@ -290,6 +309,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Xăng"
                 required
+                value={vehicle.vehicleSpec.fuelType}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
@@ -316,6 +336,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="8.6"
                 required
+                value={vehicle.vehicleSpec.fuelConsumptionPer100Km}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
@@ -340,12 +361,13 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="40"
                 required
+                value={vehicle.vehicleSpec.tankCapacity}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
                     vehicleSpec: {
                       ...vehicle.vehicleSpec,
-                      fuelConsumptionPer100Km: +e.target.value,
+                      tankCapacity: +e.target.value,
                     },
                   })
                 }
@@ -364,12 +386,13 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="200"
                 required
+                value={vehicle.vehicleSpec.topSpeed}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
                     vehicleSpec: {
                       ...vehicle.vehicleSpec,
-                      fuelConsumptionPer100Km: +e.target.value,
+                      topSpeed: +e.target.value,
                     },
                   })
                 }
@@ -389,6 +412,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="185/60/R15"
                 required
+                value={vehicle.vehicleSpec.frontRimsDimension}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,
@@ -413,6 +437,7 @@ export default function EditVehicle({
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="185/60/R15"
                 required
+                value={vehicle.vehicleSpec.backRimsDimension}
                 onChange={(e) =>
                   setVehicle({
                     ...vehicle,

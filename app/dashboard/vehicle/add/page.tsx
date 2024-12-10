@@ -34,6 +34,20 @@ export default function AddVehicle() {
   };
 
   let OnSaveClick = async () => {
+    if (!vehicle.plateNumber) {
+      toast.error("Vui lòng nhập biển số xe", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+      return;
+    }
     let result: RequestResult = await SaveData(vehicle);
     if (result == RequestResult.SUCCESS) {
       toast.success("Tạo thành công", {
@@ -47,6 +61,7 @@ export default function AddVehicle() {
         theme: "light",
         transition: Bounce,
       });
+      redirect("./");
     } else {
       toast.error("Có lỗi xảy ra, vui lòng thử lại", {
         position: "top-right",
@@ -319,7 +334,7 @@ export default function AddVehicle() {
                     ...vehicle,
                     vehicleSpec: {
                       ...vehicle.vehicleSpec,
-                      fuelConsumptionPer100Km: +e.target.value,
+                      tankCapacity: +e.target.value,
                     },
                   })
                 }
@@ -343,7 +358,7 @@ export default function AddVehicle() {
                     ...vehicle,
                     vehicleSpec: {
                       ...vehicle.vehicleSpec,
-                      fuelConsumptionPer100Km: +e.target.value,
+                      topSpeed: +e.target.value,
                     },
                   })
                 }
