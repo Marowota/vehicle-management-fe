@@ -1,11 +1,18 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import RemoveCookie from "./cookie";
+import { redirect } from "next/navigation";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let handleLogout = async () => {
+    await RemoveCookie("key");
+    redirect("/");
+  };
   return (
     <>
       <div className="w-screen h-screen bg-gray-100 flex">
@@ -120,7 +127,12 @@ export default function RootLayout({
 
               <p className="text text-md text-blue-900 font-bold ">Bảo trì</p>
             </Link>
-            <div className="mt-auto border px-2 py-3 cursor-pointer bg-sky-400 hover:bg-sky-500 active:bg-sky-600 rounded-md text-center items-center content-center shadow-md">
+            <div
+              className="mt-auto border px-2 py-3 cursor-pointer bg-sky-400 hover:bg-sky-500 active:bg-sky-600 rounded-md text-center items-center content-center shadow-md"
+              onClick={(e) => {
+                handleLogout();
+              }}
+            >
               <div className="text-white drop-shadow-lg select-none font-bold">
                 Đăng xuất
               </div>

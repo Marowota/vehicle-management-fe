@@ -5,8 +5,8 @@ import {
   VehicleInspectionInfo,
   VehicleSpec,
 } from "@/app/lib/definitions";
-import SvgDelete from "@/app/ui/svg-delete";
-import SvgEdit from "@/app/ui/svg-edit";
+import SvgDelete from "@/app/ui/svg/svg-delete";
+import SvgEdit from "@/app/ui/svg/svg-edit";
 import TableSortSvg from "@/app/ui/table-sort-svg";
 import axios from "axios";
 import Link from "next/link";
@@ -14,15 +14,17 @@ import DeleteData from "./delete/data";
 import GetData from "./data";
 import { useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
+import SvgSearch from "@/app/ui/svg/svg-search";
+import SearchBar from "@/app/ui/search/search-bar";
 
 export default function Page() {
-  const [search, setSearch] = useState<String>("");
+  //const [search, setSearch] = useState<String>("");
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   useEffect(() => {
-    GetData(search).then((e) => setVehicles(e.data));
+    GetData("").then((e) => setVehicles(e.data));
   }, []);
 
-  let searchClickHandler = () => {
+  let searchHandler = (search: string) => {
     GetData(search).then((e) => setVehicles(e.data));
   };
 
@@ -50,42 +52,7 @@ export default function Page() {
 
         <div className="flex items-start h-1/12 w-full my-3 ">
           <div className="flex">
-            <input
-              placeholder="Tìm kiếm"
-              type="text"
-              className="w-96 h-10 shadow-sm p-2.5 text-sm bg-sky-50 border border-sky-300 placeholder:text-blue-300 text-blue-900 rounded-l-lg focus:border focus:ring-sky-500 focus:border-sky-900 block  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  searchClickHandler();
-                }
-              }}
-            />
-            <div
-              className="border h-10 px-2 py-1 cursor-pointer bg-sky-400 border-sky-500 hover:bg-sky-500 active:bg-sky-600 rounded-r-lg text-center items-center content-center shadow-sm"
-              onClick={() => {
-                searchClickHandler();
-              }}
-            >
-              <div className="text-white text-sm drop-shadow-lg select-none">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="stroke-white h-5 w-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-              </div>
-            </div>
+            <SearchBar onSearch={searchHandler} />
           </div>
           <div className="ml-auto ">
             <Link

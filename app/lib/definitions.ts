@@ -78,5 +78,14 @@ export enum RequestResult {
   SUCCESS,
   ERROR,
   MISSING_DATA,
-  NOT_AUTHENTICATED
+  NOT_AUTHENTICATED,
+}
+
+export interface SvgProps {
+  className?: string;
+}
+
+export interface ResponseInfo {
+  message: string;
+  result: RequestResult;
 }

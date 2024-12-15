@@ -1,6 +1,6 @@
-import { TableBaseProps } from "../lib/definitions";
+import { SvgProps, TableBaseProps } from "../../lib/definitions";
 
-export default function SvgDelete({ className }: TableBaseProps) {
+export default function SvgDelete({ className }: SvgProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +8,7 @@ export default function SvgDelete({ className }: TableBaseProps) {
       viewBox="0 0 24 24"
       strokeWidth="1.5"
       stroke="currentColor"
-      className=""
+      className={`${className}`}
     >
       <path
         strokeLinecap="round"
