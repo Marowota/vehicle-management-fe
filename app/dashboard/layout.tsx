@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import RemoveCookie from "./cookie";
 import { redirect } from "next/navigation";
+import RemoveCookie from "../lib/utilities/cookie";
 
 export default function RootLayout({
   children,

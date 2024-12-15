@@ -13,7 +13,7 @@ export default async function LoginData(
     result: RequestResult.SUCCESS,
   };
   await axios
-    .post("http://127.0.0.1:8080/login", {
+    .post(process.env.NEXT_PUBLIC_BE_PATH + "/login", {
       username: username,
       password: password,
     })

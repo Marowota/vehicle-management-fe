@@ -1,14 +1,20 @@
 import { RequestResult, Vehicle } from "@/app/lib/definitions";
+import GetKey from "@/app/lib/utilities/get-key";
 import axios from "axios";
 
 export default async function EditData(
   vehicle: Vehicle
 ): Promise<RequestResult> {
-  let result = await axios.put("http://127.0.0.1:8080/vehicles", vehicle, {
-    headers: {
-      "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
-    },
-  });
+  const key = await GetKey();
+  let result = await axios.put(
+    process.env.NEXT_PUBLIC_BE_PATH + "/vehicles",
+    vehicle,
+    {
+      headers: {
+        "X-API-KEY": key,
+      },
+    }
+  );
   if (result.data == "SUCCESS") return RequestResult.SUCCESS;
   return RequestResult.ERROR;
 }
