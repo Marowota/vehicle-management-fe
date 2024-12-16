@@ -4,7 +4,7 @@ import { RequestResult, Vehicle } from "@/app/lib/definitions";
 import { redirect, usePathname } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
-import EditData from "./data";
+import { EditData, GetVehicleFromId } from "./data";
 import axios from "axios";
 
 export default function EditVehicle({
@@ -42,19 +42,15 @@ export default function EditVehicle({
 
   useEffect(() => {
     if (id) {
-      axios
-        .get(`http://127.0.0.1:8080/vehicles/${id}`, {
-          headers: {
-            "X-API-KEY": process.env.NEXT_PUBLIC_API_KEY,
-          },
-        })
-        .then((e) => {
-          console.log("setting", e.data);
-          setVehicle((prevState) => ({
+      GetVehicleFromId({ id: id }).then((result) => {
+        setVehicle((prevState) => {
+          console.log("a", result);
+          return {
             ...prevState,
-            ...e.data,
-          }));
+            ...result,
+          };
         });
+      });
     }
   }, [id]);
 
@@ -69,7 +65,7 @@ export default function EditVehicle({
   let OnSaveClick = async () => {
     let result: RequestResult = await EditData(vehicle);
     if (result == RequestResult.SUCCESS) {
-      toast.success("Tạo thành công", {
+      toast.success("Sửa thành công", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,

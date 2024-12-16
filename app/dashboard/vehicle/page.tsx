@@ -77,7 +77,7 @@ export default function Page() {
           <div className="w-full h-full flex ">
             <div className="relative overflow-auto shadow-md sm:rounded-lg w-full h-full  ">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
-                <thead className="text-xs text-blue-700 uppercase bg-blue-50 dark:bg-gray-700 dark:text-gray-400 sticky z-10 top-0">
+                <thead className="text-xs text-blue-700 uppercase bg-blue-50 dark:bg-gray-700 dark:text-gray-400 sticky  top-0">
                   <tr>
                     <th scope="col" className="px-6 py-3  z-10">
                       Biển số xe
@@ -133,8 +133,11 @@ export default function Page() {
                           {vehicle.plateNumber}
                         </th>
 
-                        <td className="px-6 py-4 cursor-pointer">
-                          <TableDialog />
+                        <td className="px-6 py-4">
+                          <TableDialog
+                            plateNumber={vehicle.plateNumber}
+                            spec={vehicle.vehicleSpec}
+                          />
                         </td>
                         <td className="px-6 py-4">{vehicle.cost}</td>
                         <td className="px-6 py-4">{vehicle.health}</td>
