@@ -8,6 +8,7 @@ import { Bounce, toast } from "react-toastify";
 import LoginData from "./data";
 import { RequestResult } from "./lib/definitions";
 import { redirect } from "next/navigation";
+import "@radix-ui/themes/styles.css";
 
 export default function Home() {
   let [username, setUsername] = useState("");

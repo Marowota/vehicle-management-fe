@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
 import SvgSearch from "@/app/ui/svg/svg-search";
 import SearchBar from "@/app/ui/search/search-bar";
+import DialogDemo from "@/app/ui/dialog";
+import TableDialog from "@/app/ui/table-dialog";
 
 export default function Page() {
   //const [search, setSearch] = useState<String>("");
@@ -81,7 +83,7 @@ export default function Page() {
                       Biển số xe
                     </th>
                     <th scope="col" className="px-6 py-3  z-10">
-                      <div className="flex items-center">
+                      <div className="flex items-center ">
                         Thông số
                         <a href="#">
                           <TableSortSvg />
@@ -121,18 +123,18 @@ export default function Page() {
                   {vehicles.map((vehicle, i): React.ReactNode => {
                     return (
                       <tr
-                        className="bg-white  dark:bg-gray-800 dark:border-gray-700 hover:bg-sky-50"
+                        className="bg-white  dark:bg-gray-800 dark:border-gray-700 hover:bg-sky-50 "
                         key={i}
                       >
                         <th
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white "
                         >
                           {vehicle.plateNumber}
                         </th>
 
-                        <td className="px-6 py-4">
-                          {vehicle.vehicleSpec.brand}
+                        <td className="px-6 py-4 cursor-pointer">
+                          <TableDialog />
                         </td>
                         <td className="px-6 py-4">{vehicle.cost}</td>
                         <td className="px-6 py-4">{vehicle.health}</td>

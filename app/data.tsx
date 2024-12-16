@@ -25,9 +25,10 @@ export default async function LoginData(
     .catch((e) => {
       //console.log(e);
       result = {
-        message: e,
+        message: "Tài khoản hoặc mật khẩu không đúng",
         result: RequestResult.ERROR,
       };
+      return result;
     });
 
   return result;

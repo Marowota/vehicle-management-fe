@@ -5,34 +5,41 @@ import axios from "axios";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
-  console.log(request.url);
+  let res = NextResponse.next();
+  //console.log(request.url);
   const acceptHeader = request.headers.get("accept");
 
   const cookieStore = await cookies();
   const key = cookieStore.get("key");
-  let res;
-  console.log("middleware called", key);
-  try {
-    res = await axios.get("http://127.0.0.1:8080/account/verify", {
-      headers: {
-        "X-API-KEY": key?.value,
-      },
-    });
+  console.log("middleware called", key?.value);
+  if (request.nextUrl.pathname == "/" && request.method == "POST") {
+    //console.log("middleware post", key);
+    return res;
+  }
 
+  try {
+    let result = (
+      await axios.get("http://127.0.0.1:8080/account/verify", {
+        headers: {
+          "X-API-KEY": key?.value,
+        },
+      })
+    ).status;
     if (request.nextUrl.pathname == "/") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      res = NextResponse.redirect(new URL("/dashboard", request.url));
     } else if (acceptHeader && acceptHeader.includes("text/html") && key) {
-      const response = NextResponse.next();
-      response.headers.set("KEY", key.value);
-      return response;
+      res = NextResponse.next();
+      res.headers.set("KEY", key.value);
     }
   } catch (e) {
     if (request.nextUrl.pathname == "/") {
-      return NextResponse.next();
+      console.log("hello", request.nextUrl.pathname);
+      res = NextResponse.next();
     } else if (acceptHeader && acceptHeader.includes("text/html")) {
-      return NextResponse.redirect(new URL("/", request.url));
+      res = NextResponse.redirect(new URL("/", request.url));
     }
   }
+  return res;
 }
 
 export const config = {
