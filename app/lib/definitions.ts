@@ -47,7 +47,7 @@ export interface VehicleMaintenanceInfo {
 export interface VehicleRegisterInfo {
   id: number;
   plateNumber: string;
-  teacherId: number;
+  teacherName: string;
   courseName: string;
   start: Date;
   end: Date;
@@ -79,6 +79,14 @@ export enum RequestResult {
   ERROR,
   MISSING_DATA,
   NOT_AUTHENTICATED,
+}
+
+export enum RegisterResult {
+  ACCEPTED = "ACCEPTED",
+  NO_TEACHER = "NO_TEACHER",
+  DATE_COLLISION = "DATE_COLLISION",
+  MAINTAINING = "MAINTAINING",
+  ERROR = "ERROR",
 }
 
 export interface SvgProps {

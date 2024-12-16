@@ -18,6 +18,7 @@ import SvgSearch from "@/app/ui/svg/svg-search";
 import SearchBar from "@/app/ui/search/search-bar";
 import DialogDemo from "@/app/ui/dialog";
 import TableDialog from "@/app/ui/table-dialog";
+import ToastSuccess from "@/app/ui/noti/success";
 
 export default function Page() {
   //const [search, setSearch] = useState<String>("");
@@ -33,17 +34,7 @@ export default function Page() {
   let deleteClickHandler = (vehicle: Vehicle, index: number) => {
     DeleteData(vehicle);
     setVehicles(vehicles.filter((data, i) => i != index));
-    toast.success("Xóa thành công", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+    ToastSuccess("Xóa thành công");
   };
 
   return (

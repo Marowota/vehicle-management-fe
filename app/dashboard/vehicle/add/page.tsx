@@ -6,6 +6,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import SaveData from "./data";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { redirect } from "next/navigation";
+import ToastError from "@/app/ui/noti/error";
+import ToastSuccess from "@/app/ui/noti/success";
 
 export default function AddVehicle() {
   let [vehicle, setVehicle]: [Vehicle, Dispatch<SetStateAction<Vehicle>>] =
@@ -35,45 +37,15 @@ export default function AddVehicle() {
 
   let OnSaveClick = async () => {
     if (!vehicle.plateNumber) {
-      toast.error("Vui lòng nhập biển số xe", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      ToastError("Vui lòng nhập biển số xe");
       return;
     }
     let result: RequestResult = await SaveData(vehicle);
     if (result == RequestResult.SUCCESS) {
-      toast.success("Tạo thành công", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      ToastSuccess("Tạo thành công");
       redirect("./");
     } else {
-      toast.error("Có lỗi xảy ra, vui lòng thử lại", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      ToastError("Có lỗi xảy ra, vui lòng thử lại");
     }
   };
   return (
