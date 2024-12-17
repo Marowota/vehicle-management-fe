@@ -62,7 +62,11 @@ export default function UsagePage() {
               <p>Từ ngày</p>
               <DatePicker
                 onChange={(value) => {
-                  setFromDate(new Date(value));
+                  if (!value) {
+                    setFromDate(new Date(Date.UTC(0, 1, 1)));
+                    return;
+                  }
+                  setFromDate(new Date(value + "Z"));
                 }}
               />
             </div>
@@ -70,7 +74,11 @@ export default function UsagePage() {
               <p>Đến ngày</p>
               <DatePicker
                 onChange={(value) => {
-                  setToDate(new Date(value));
+                  if (!value) {
+                    setToDate(new Date(Date.UTC(3000, 1, 1)));
+                    return;
+                  }
+                  setToDate(new Date(value + "Z"));
                 }}
               />
             </div>
@@ -146,20 +154,20 @@ export default function UsagePage() {
                         <td className="px-6 py-4">{vehicleReg.teacherName}</td>
                         <td className="px-6 py-4">{vehicleReg.courseName}</td>
                         <td className="px-6 py-4">
-                          {vehicleReg.start.toLocaleString()}
+                          {new Date(
+                            vehicleReg.start.toLocaleString()
+                          ).toLocaleString()}
                         </td>
                         <td className="px-6 py-4">
-                          {vehicleReg.end.toLocaleString()}
+                          {new Date(
+                            vehicleReg.end.toLocaleString()
+                          ).toLocaleString()}
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex h-8 w-fit ml-auto">
                             <div className="ml-auto flex gap-2">
                               <Link
-                                href={`./vehicle/edit/${
-                                  vehicleReg.plateNumber != ""
-                                    ? vehicleReg.plateNumber
-                                    : "-0"
-                                }`}
+                                href={`./usage/edit/${vehicleReg.id.toString()}`}
                                 className="h-8 w-8 hover:bg-sky-200 rounded-full p-1 cursor-pointer active:bg-sky-300"
                               >
                                 <SvgEdit />

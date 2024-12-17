@@ -5,23 +5,33 @@ import {
   RequestResult,
   Vehicle,
   VehicleRegisterInfo,
-  VehicleSpec,
-  VehicleUsageInfo,
 } from "@/app/lib/definitions";
-import axios from "axios";
+import { redirect, usePathname } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import SaveData from "./data";
-import { Bounce, ToastContainer, toast } from "react-toastify";
-import { redirect } from "next/navigation";
+import { Bounce, toast } from "react-toastify";
+import { EditData, GetUsageFromId } from "./data";
+import axios from "axios";
 import ToastError from "@/app/ui/noti/error";
+import GetVehicleData from "@/app/dashboard/vehicle/data";
 import ToastSuccess from "@/app/ui/noti/success";
-import GetVehicleData from "../../vehicle/data";
 
-export default function AddUsage() {
-  let [vehicleReg, setVehicleReg]: [
+export default function EditUsage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const [id, setId] = useState<string | null>(null);
+  const [vehicleReg, setVehicleReg]: [
     VehicleRegisterInfo,
     Dispatch<SetStateAction<VehicleRegisterInfo>>
-  ] = useState<VehicleRegisterInfo>({} as VehicleRegisterInfo);
+  ] = useState<VehicleRegisterInfo>({
+    id: 0,
+    plateNumber: "",
+    teacherName: "",
+    courseName: "",
+    start: new Date(),
+    end: new Date(),
+  });
 
   let [vehicleList, setVehicleList]: [
     Vehicle[],
@@ -35,8 +45,36 @@ export default function AddUsage() {
     });
   }, []);
 
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      setId(resolvedParams.id);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    if (id) {
+      GetUsageFromId({ id: id }).then((result) => {
+        setVehicleReg((prevState) => {
+          console.log("a", result);
+          return {
+            ...prevState,
+            ...result,
+            teacherName: result.teacherName ?? "",
+            courseName: result.courseName ?? "",
+            start: new Date(result.start + "Z"),
+            end: new Date(result.end + "Z"),
+          };
+        });
+      });
+    }
+  }, [id]);
+
+  useEffect(() => {
+    console.log("vehicle", vehicleReg);
+  }, [vehicleReg]);
+
   let OnCancelClick = () => {
-    redirect("./");
+    redirect("../");
   };
 
   let OnSaveClick = async () => {
@@ -51,10 +89,11 @@ export default function AddUsage() {
       ToastError("Biển số không tồn tại");
       return;
     }
-    let result: RegisterResult = await SaveData(vehicleReg);
+
+    let result: RegisterResult = await EditData(vehicleReg);
     if (result == RegisterResult.ACCEPTED) {
-      ToastSuccess("Tạo thành công");
-      redirect("./");
+      ToastSuccess("Sửa thành công");
+      redirect("../");
     } else if ((result = RegisterResult.DATE_COLLISION)) {
       ToastError("Thời gian sử dụng bị trùng, hãy chọn một thời gian khác");
     } else {
@@ -81,6 +120,7 @@ export default function AddUsage() {
                 type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
+                value={vehicleReg.plateNumber}
                 onChange={(e) => {
                   setVehicleReg({
                     ...vehicleReg,
@@ -111,6 +151,7 @@ export default function AddUsage() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Anh"
                 required
+                value={vehicleReg.teacherName}
                 onChange={(e) =>
                   setVehicleReg({
                     ...vehicleReg,
@@ -134,6 +175,7 @@ export default function AddUsage() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Lop oto 11"
                 required
+                value={vehicleReg.courseName}
                 onChange={(e) =>
                   setVehicleReg({
                     ...vehicleReg,
@@ -154,6 +196,7 @@ export default function AddUsage() {
                 id="vehicle_price"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
+                value={vehicleReg.start.toISOString().slice(0, 16)}
                 onChange={(e) =>
                   setVehicleReg({
                     ...vehicleReg,
@@ -174,6 +217,7 @@ export default function AddUsage() {
                 id="vehicle_id"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
+                value={vehicleReg.end.toISOString().slice(0, 16)}
                 onChange={(e) =>
                   setVehicleReg({
                     ...vehicleReg,

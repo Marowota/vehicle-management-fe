@@ -2,7 +2,9 @@ import { RequestResult, Vehicle } from "@/app/lib/definitions";
 import GetKey from "@/app/lib/utilities/get-key";
 import axios, { AxiosResponse } from "axios";
 
-export default async function GetData(search: String): Promise<AxiosResponse> {
+export default async function GetVehicleData(
+  search: String
+): Promise<AxiosResponse> {
   let key = await GetKey();
   let [result, resultI] = await axios.all([
     axios.get(process.env.NEXT_PUBLIC_BE_PATH + "/vehicles", {

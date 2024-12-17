@@ -11,7 +11,7 @@ import TableSortSvg from "@/app/ui/table-sort-svg";
 import axios from "axios";
 import Link from "next/link";
 import DeleteData from "./delete/data";
-import GetData from "./data";
+import GetVehicleData from "./data";
 import { useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
 import SvgSearch from "@/app/ui/svg/svg-search";
@@ -24,11 +24,11 @@ export default function Page() {
   //const [search, setSearch] = useState<String>("");
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   useEffect(() => {
-    GetData("").then((e) => setVehicles(e.data));
+    GetVehicleData("").then((e) => setVehicles(e.data));
   }, []);
 
   let searchHandler = (search: string) => {
-    GetData(search).then((e) => setVehicles(e.data));
+    GetVehicleData(search).then((e) => setVehicles(e.data));
   };
 
   let deleteClickHandler = (vehicle: Vehicle, index: number) => {
