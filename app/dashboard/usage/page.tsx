@@ -18,7 +18,7 @@ import SearchBar from "@/app/ui/search/search-bar";
 import DialogDemo from "@/app/ui/dialog";
 import TableDialog from "@/app/ui/table-dialog";
 import ToastSuccess from "@/app/ui/noti/success";
-import DatePicker from "@/app/ui/datepicker";
+import DateTimePicker from "@/app/ui/date-time-picker";
 import classNamesConverter from "@/app/lib/utilities/class-name-converter";
 import GetData from "./data";
 
@@ -60,7 +60,7 @@ export default function UsagePage() {
           <div className="flex gap-4">
             <div>
               <p>Từ ngày</p>
-              <DatePicker
+              <DateTimePicker
                 onChange={(value) => {
                   if (!value) {
                     setFromDate(new Date(Date.UTC(0, 1, 1)));
@@ -72,7 +72,7 @@ export default function UsagePage() {
             </div>
             <div>
               <p>Đến ngày</p>
-              <DatePicker
+              <DateTimePicker
                 onChange={(value) => {
                   if (!value) {
                     setToDate(new Date(Date.UTC(3000, 1, 1)));

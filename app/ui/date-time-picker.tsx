@@ -1,11 +1,14 @@
 import { FunctionComponent, useState } from "react";
 
-interface DatePickerProps {
+interface DateTimePickerProps {
   text?: string;
   onChange: (date: string) => void;
 }
 
-export default function DatePicker({ text, onChange }: DatePickerProps) {
+export default function DateTimePicker({
+  text,
+  onChange,
+}: DateTimePickerProps) {
   return (
     <div className="relative max-w-sm">
       <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">

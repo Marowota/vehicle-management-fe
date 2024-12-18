@@ -97,3 +97,10 @@ export interface ResponseInfo {
   message: string;
   result: RequestResult;
 }
+
+export enum InspectionSearchParams {
+  REGISTRATION_DATE = "REGISTRATION_DATE",
+  VALID_UNTIL = "VALID_UNTIL",
+  PLATE_NUMBER = "PLATE_NUMBER",
+  INSPECTION_NO = "INSPECTION_NO",
+}
