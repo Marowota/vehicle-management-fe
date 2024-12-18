@@ -1,20 +1,21 @@
 import {
   RequestResult,
   Vehicle,
+  VehicleInspectionInfo,
   VehicleRegisterInfo,
 } from "@/app/lib/definitions";
 import GetKey from "@/app/lib/utilities/get-key";
 import axios from "axios";
 
 export default async function DeleteData(
-  vehicleReg: VehicleRegisterInfo
+  vehicleReg: VehicleInspectionInfo
 ): Promise<RequestResult> {
   const key = await GetKey();
   let result = await axios.delete(
-    `${process.env.NEXT_PUBLIC_BE_PATH}/vehicles/${vehicleReg.plateNumber}/register`,
+    `${process.env.NEXT_PUBLIC_BE_PATH}/vehicles/${vehicleReg.plateNumber}/set-inspection`,
     {
       params: {
-        id: vehicleReg.id,
+        id: vehicleReg.inspectionNo,
       },
       headers: {
         "X-API-KEY": key,

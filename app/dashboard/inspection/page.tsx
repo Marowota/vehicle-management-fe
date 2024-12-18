@@ -14,6 +14,7 @@ import ToastSuccess from "@/app/ui/noti/success";
 import DateTimePicker from "@/app/ui/date-time-picker";
 import GetData from "./data";
 import DatePicker from "@/app/ui/date-picker";
+import DeleteData from "./delete/data";
 
 export default function UsagePage() {
   const [search, setSearch] = useState<string>("");
@@ -51,10 +52,10 @@ export default function UsagePage() {
   };
 
   let deleteClickHandler = (
-    vehicleReg: VehicleInspectionInfo,
+    vehicleInspect: VehicleInspectionInfo,
     index: number
   ) => {
-    //DeleteData(vehicle);
+    DeleteData(vehicleInspect);
     setVehicleInspects(vehicleInspects.filter((data, i) => i != index));
     ToastSuccess("Xóa thành công");
   };
@@ -149,11 +150,11 @@ export default function UsagePage() {
 
           <div className="ml-auto ">
             <Link
-              href={"./usage/add"}
+              href={"./inspection/add"}
               className="block border h-10 w-28 px-2 py-1 cursor-pointer bg-sky-400 border-sky-500 hover:bg-sky-500 active:bg-sky-600 rounded text-center items-center content-center shadow-sm"
             >
               <div className="text-white text-sm drop-shadow-lg select-none">
-                Đặt lịch
+                Đăng kiểm
               </div>
             </Link>
           </div>

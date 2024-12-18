@@ -6,18 +6,13 @@ export default async function GetVehicleData(
   search: String
 ): Promise<AxiosResponse> {
   let key = await GetKey();
-  let [result, resultI] = await axios.all([
+  let [result] = await axios.all([
     axios.get(process.env.NEXT_PUBLIC_BE_PATH + "/vehicles", {
       headers: {
         "X-API-KEY": key,
       },
       params: {
         query: search,
-      },
-    }),
-    axios.get(process.env.NEXT_PUBLIC_BE_PATH + "/inspection-info", {
-      headers: {
-        "X-API-KEY": key,
       },
     }),
   ]);

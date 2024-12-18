@@ -21,6 +21,7 @@ import ToastSuccess from "@/app/ui/noti/success";
 import DateTimePicker from "@/app/ui/date-time-picker";
 import classNamesConverter from "@/app/lib/utilities/class-name-converter";
 import GetData from "./data";
+import DeleteData from "./delete/data";
 
 export default function UsagePage() {
   //const [search, setSearch] = useState<String>("");
@@ -45,7 +46,7 @@ export default function UsagePage() {
   };
 
   let deleteClickHandler = (vehicleReg: VehicleRegisterInfo, index: number) => {
-    //DeleteData(vehicle);
+    DeleteData(vehicleReg);
     setVehicleRegs(vehicleRegs.filter((data, i) => i != index));
     ToastSuccess("Xóa thành công");
   };
