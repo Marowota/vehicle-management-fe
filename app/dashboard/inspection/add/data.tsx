@@ -1,4 +1,5 @@
 import {
+  InspectionResult,
   RegisterResult,
   RequestResult,
   VehicleInspectionInfo,
@@ -9,11 +10,11 @@ import { cookies } from "next/headers";
 
 export default async function SaveData(
   vehicleInspect: VehicleInspectionInfo
-): Promise<RequestResult> {
+): Promise<InspectionResult> {
   console.log(vehicleInspect);
 
   const key = await GetKey();
-  if (!key) return RequestResult.ERROR;
+  if (!key) return InspectionResult.ERROR;
   let result = await axios.post(
     `${process.env.NEXT_PUBLIC_BE_PATH}/vehicles/${vehicleInspect.plateNumber}/set-inspection`,
     vehicleInspect,
@@ -23,6 +24,7 @@ export default async function SaveData(
       },
     }
   );
-  if (result.data == "SUCCESS") return RequestResult.SUCCESS;
-  else return RequestResult.ERROR;
+  if (result.data == "SUCCESS") return InspectionResult.SUCCESS;
+  if (result.data == "EXISTED") return InspectionResult.EXISTED;
+  else return InspectionResult.ERROR;
 }

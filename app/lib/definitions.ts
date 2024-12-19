@@ -81,6 +81,13 @@ export enum RequestResult {
   NOT_AUTHENTICATED,
 }
 
+export enum InspectionResult {
+  SUCCESS,
+  ERROR,
+  MISSING_DATA,
+  EXISTED,
+}
+
 export enum RegisterResult {
   ACCEPTED = "ACCEPTED",
   NO_TEACHER = "NO_TEACHER",

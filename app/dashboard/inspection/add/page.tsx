@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  InspectionResult,
   RegisterResult,
   RequestResult,
   Vehicle,
@@ -15,7 +16,7 @@ import ToastError from "@/app/ui/noti/error";
 import ToastSuccess from "@/app/ui/noti/success";
 import GetVehicleData from "../../vehicle/data";
 
-export default function AddUsage() {
+export default function AddInspection() {
   let [vehicleInspects, setVehicleInspects]: [
     VehicleInspectionInfo,
     Dispatch<SetStateAction<VehicleInspectionInfo>>
@@ -50,10 +51,12 @@ export default function AddUsage() {
       ToastError("Biển số không tồn tại");
       return;
     }
-    let result: RequestResult = await SaveData(vehicleInspects);
-    if (result == RequestResult.SUCCESS) {
+    let result: InspectionResult = await SaveData(vehicleInspects);
+    if (result == InspectionResult.SUCCESS) {
       ToastSuccess("Tạo thành công");
       redirect("./");
+    } else if (result == InspectionResult.EXISTED) {
+      ToastError("Mã đăng kiểm đã tồn tại");
     } else {
       ToastError("Có lỗi xảy ra, vui lòng thử lại");
     }

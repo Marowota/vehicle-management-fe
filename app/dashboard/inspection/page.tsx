@@ -16,7 +16,7 @@ import GetData from "./data";
 import DatePicker from "@/app/ui/date-picker";
 import DeleteData from "./delete/data";
 
-export default function UsagePage() {
+export default function InspectionPage() {
   const [search, setSearch] = useState<string>("");
   const [searchOption, setSearchOption] = useState(
     InspectionSearchParams.VALID_UNTIL
@@ -213,7 +213,7 @@ export default function UsagePage() {
                           <div className="flex h-8 w-fit ml-auto">
                             <div className="ml-auto flex gap-2">
                               <Link
-                                href={`./usage/edit/${vehicleReg.inspectionNo.toString()}`}
+                                href={`./inspection/edit/${vehicleReg.inspectionNo.toString()}`}
                                 className="h-8 w-8 hover:bg-sky-200 rounded-full p-1 cursor-pointer active:bg-sky-300"
                               >
                                 <SvgEdit />
