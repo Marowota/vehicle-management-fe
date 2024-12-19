@@ -12,7 +12,7 @@ export default async function DeleteData(
 ): Promise<RequestResult> {
   const key = await GetKey();
   let result = await axios.delete(
-    `${process.env.NEXT_PUBLIC_BE_PATH}/vehicles/${vehicleReg.plateNumber}/set-inspection`,
+    `${process.env.NEXT_PUBLIC_BE_PATH}/vehicles/${vehicleReg.plateNumber}/inspection`,
     {
       params: {
         id: vehicleReg.inspectionNo,

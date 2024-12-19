@@ -7,20 +7,31 @@ import {
   Vehicle,
   VehicleInspectionInfo,
 } from "@/app/lib/definitions";
-import axios from "axios";
+import { redirect, usePathname } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import SaveData from "./data";
-import { Bounce, ToastContainer, toast } from "react-toastify";
-import { redirect } from "next/navigation";
+import { Bounce, toast } from "react-toastify";
+import { EditData, GetInspectionFromInspectionNo } from "./data";
+import axios from "axios";
 import ToastError from "@/app/ui/noti/error";
+import GetVehicleData from "@/app/dashboard/vehicle/data";
 import ToastSuccess from "@/app/ui/noti/success";
-import GetVehicleData from "../../vehicle/data";
 
-export default function AddInspection() {
-  let [vehicleInspect, setVehicleInspect]: [
+export default function EditInspection({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const [id, setId] = useState<string | null>(null);
+  const [vehicleInspect, setVehicleInspect]: [
     VehicleInspectionInfo,
     Dispatch<SetStateAction<VehicleInspectionInfo>>
-  ] = useState<VehicleInspectionInfo>({} as VehicleInspectionInfo);
+  ] = useState<VehicleInspectionInfo>({
+    inspectionNo: "",
+    plateNumber: "",
+    registrationDate: new Date(),
+    validUntil: new Date(),
+    cost: 0,
+  });
 
   let [vehicleList, setVehicleList]: [
     Vehicle[],
@@ -34,8 +45,34 @@ export default function AddInspection() {
     });
   }, []);
 
+  useEffect(() => {
+    params.then((resolvedParams) => {
+      setId(resolvedParams.id);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    if (id) {
+      GetInspectionFromInspectionNo({ inspectionNo: id }).then((result) => {
+        setVehicleInspect((prevState) => {
+          console.log("a", result);
+          return {
+            ...prevState,
+            ...result,
+            registrationDate: new Date(result.registrationDate + "Z"),
+            validUntil: new Date(result.validUntil + "Z"),
+          };
+        });
+      });
+    }
+  }, [id]);
+
+  useEffect(() => {
+    console.log("vehicle", vehicleInspect);
+  }, [vehicleInspect]);
+
   let OnCancelClick = () => {
-    redirect("./");
+    redirect("../");
   };
 
   let OnSaveClick = async () => {
@@ -51,10 +88,10 @@ export default function AddInspection() {
       ToastError("Biển số không tồn tại");
       return;
     }
-    let result: InspectionResult = await SaveData(vehicleInspect);
+    let result: InspectionResult = await EditData(vehicleInspect);
     if (result == InspectionResult.SUCCESS) {
-      ToastSuccess("Tạo thành công");
-      redirect("./");
+      ToastSuccess("Sửa thành công");
+      redirect("../");
     } else if (result == InspectionResult.EXISTED) {
       ToastError("Mã đăng kiểm đã tồn tại");
     } else {
@@ -84,6 +121,7 @@ export default function AddInspection() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
                 placeholder="KH-123456"
+                value={vehicleInspect.plateNumber}
                 onChange={(e) => {
                   setVehicleInspect({
                     ...vehicleInspect,
@@ -114,6 +152,8 @@ export default function AddInspection() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="KC1708901"
                 required
+                value={vehicleInspect.inspectionNo}
+                readOnly
                 onChange={(e) =>
                   setVehicleInspect({
                     ...vehicleInspect,
@@ -137,6 +177,7 @@ export default function AddInspection() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="50"
                 required
+                value={vehicleInspect.cost}
                 onChange={(e) =>
                   setVehicleInspect({
                     ...vehicleInspect,
@@ -153,10 +194,13 @@ export default function AddInspection() {
                 Ngày đăng kiểm
               </label>
               <input
-                type="datetime-local"
+                type="date"
                 id="vehicle_price"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
+                value={vehicleInspect.registrationDate
+                  .toISOString()
+                  .slice(0, 10)}
                 onChange={(e) =>
                   setVehicleInspect({
                     ...vehicleInspect,
@@ -173,10 +217,11 @@ export default function AddInspection() {
                 Ngày hết hạn
               </label>
               <input
-                type="datetime-local"
+                type="date"
                 id="vehicle_id"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
+                value={vehicleInspect.validUntil.toISOString().slice(0, 10)}
                 onChange={(e) =>
                   setVehicleInspect({
                     ...vehicleInspect,

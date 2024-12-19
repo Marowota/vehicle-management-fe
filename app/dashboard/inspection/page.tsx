@@ -33,7 +33,7 @@ export default function InspectionPage() {
     "Mã đăng kiểm",
     "Ngày đăng kiểm",
     "Hiệu lực đến",
-    "Chi phí",
+    "Chi phí (Tr Đ)",
   ];
 
   useEffect(() => {}, [searchOption]);
@@ -76,7 +76,7 @@ export default function InspectionPage() {
                   <DatePicker
                     onChange={(value) => {
                       if (!value) {
-                        setFromDate(new Date(Date.UTC(0, 1, 1)));
+                        setFromDate(new Date("1-1-1Z"));
                         return;
                       }
                       setFromDate(new Date(value + "Z"));
@@ -88,7 +88,7 @@ export default function InspectionPage() {
                   <DatePicker
                     onChange={(value) => {
                       if (!value) {
-                        setToDate(new Date(Date.UTC(3000, 1, 1)));
+                        setToDate(new Date("3000-1-1Z"));
                         return;
                       }
                       setToDate(new Date(value + "Z"));
