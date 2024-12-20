@@ -41,7 +41,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Chi phí năm nay (triệu đồng)",
+      text: "Chi phí năm nay",
     },
   },
 };
@@ -51,7 +51,7 @@ export default function ChartMoney({ dataIn }: { dataIn: number[] }) {
     labels,
     datasets: [
       {
-        label: "Dataset 2",
+        label: "Triệu đồng",
         data: dataIn,
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
