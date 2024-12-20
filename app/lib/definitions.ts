@@ -120,3 +120,9 @@ export interface Dashboard {
   costPerMonth: number[];
   usingVehiclesDetail: VehicleRegisterInfo[];
 }
+
+export enum MaintenanceSearchType {
+  PLATE_NUMBER = "PLATE_NUMBER",
+  START = "START",
+  END = "END",
+}

@@ -103,7 +103,7 @@ export default function EditInspection({
     <>
       <div className="px-10 py-10 h-full w-full flex flex-col ">
         <div className="font-bold text-xl text-blue-900">
-          Thêm thông tin đăng kiểm
+          Sửa thông tin đăng kiểm
         </div>
         <div className="border border-sky-100 my-3"></div>
         <div className="flex items-start w-full h-3/4 my-3  flex-col gap-6 overflow-auto">
