@@ -111,3 +111,12 @@ export enum InspectionSearchParams {
   PLATE_NUMBER = "PLATE_NUMBER",
   INSPECTION_NO = "INSPECTION_NO",
 }
+
+export interface Dashboard {
+  numberOfVehicles: number;
+  usingVehicles: number;
+  inspectedVehicles: number;
+  totalYearCost: number;
+  costPerMonth: number[];
+  usingVehiclesDetail: VehicleRegisterInfo[];
+}
