@@ -9,6 +9,7 @@ import SvgLayoutVehicle from "../ui/svg/svg-layout-vehicle";
 import SvgLayoutUsage from "../ui/svg/svg-layout-usage";
 import svgLayoutInspection from "../ui/svg/svg-layout-inspection";
 import SvgLayoutMaintenance from "../ui/svg/svg-layout-maintenance";
+import SvgSetting from "../ui/svg/svg-setting";
 
 export default function RootLayout({
   children,
@@ -56,6 +57,11 @@ export default function RootLayout({
               href="/dashboard/maintenance"
               text="Bảo trì"
               SvgComponent={SvgLayoutMaintenance}
+            />
+            <LayoutBtn
+              href="/dashboard/setting"
+              text="Cài đặt"
+              SvgComponent={SvgSetting}
             />
 
             <div

@@ -15,6 +15,7 @@ export interface Account {
   name: string;
   role: AccountRole;
   isEnabled: boolean;
+  password: string;
 }
 
 export interface Vehicle {
@@ -125,4 +126,11 @@ export enum MaintenanceSearchType {
   PLATE_NUMBER = "PLATE_NUMBER",
   START = "START",
   END = "END",
+}
+
+export enum AccountRequestResult {
+  EXISTED = "EXISTED",
+  CREATED = "CREATED",
+  UPDATED = "UPDATED",
+  ERROR = "ERROR",
 }
